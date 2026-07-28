@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /$
+Allow: /assets/
+Disallow: /api/
+Disallow: /inc/
+Disallow: /cache/
+Disallow: /data/
+Disallow: /*?
+
+Sitemap: https://vps.ss/sitemap.xml
