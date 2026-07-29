@@ -263,15 +263,17 @@
         if (!mem) { return false; }
 
         if (mem.amount !== undefined && mem.amount !== '') { $('renewalAmount').value = mem.amount; }
-        if (mem.curr && $('currencySelector').querySelector('option[value="' + mem.curr + '"]')) {
-            $('currencySelector').value = mem.curr;
+        if (mem.curr) {
+            setCselByValue('currencySelectorDropdown', 'currencySelectorLabel', 'currencySelector', mem.curr);
         }
         if (mem.useCustom) {
             $('useCustomRate').checked = true;
             if (mem.customRate !== undefined) { $('customRateInput').value = mem.customRate; }
         }
         if (mem.useMiddleman) { $('useMiddleman').checked = true; }
-        if (mem.middlemanPayer) { $('middlemanPayer').value = mem.middlemanPayer; }
+        if (mem.middlemanPayer) {
+            setCselByValue('middlemanPayerDropdown', 'middlemanPayerLabel', 'middlemanPayer', mem.middlemanPayer);
+        }
 
         if (mem.cycleDays && mem.cycleDays !== cycleDays) {
             cycleDays = parseInt(mem.cycleDays, 10);
@@ -282,6 +284,41 @@
                 $('expiryDate').value = localISO(d, isDateTime);
             }
         }
+        return true;
+    }
+
+    /* ---------------- 自定义下拉 (csel-wrap) ---------------- */
+    function initCsel(opts) {
+        var btn = $(opts.btnId), dd = $(opts.ddId), label = $(opts.labelId), hidden = opts.hiddenId ? $(opts.hiddenId) : null;
+        if (!btn || !dd) { return; }
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            Array.prototype.forEach.call(document.querySelectorAll('.csel-dropdown.open'), function (o) {
+                if (o !== dd) { o.classList.remove('open'); }
+            });
+            var open = dd.classList.toggle('open');
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        Array.prototype.forEach.call(dd.querySelectorAll('.csel-option'), function (opt) {
+            opt.addEventListener('click', function () {
+                if (label) { label.textContent = opt.dataset.label || opt.textContent.trim(); }
+                if (hidden) { hidden.value = opt.dataset.value; }
+                Array.prototype.forEach.call(dd.querySelectorAll('.csel-option'), function (o) { o.classList.toggle('active', o === opt); });
+                dd.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                calculate();
+            });
+        });
+    }
+
+    function setCselByValue(ddId, labelId, hiddenId, value) {
+        var dd = $(ddId);
+        if (!dd) { return false; }
+        var opt = dd.querySelector('.csel-option[data-value="' + value + '"]');
+        if (!opt) { return false; }
+        if ($(labelId)) { $(labelId).textContent = opt.dataset.label || opt.textContent.trim(); }
+        if ($(hiddenId)) { $(hiddenId).value = value; }
+        Array.prototype.forEach.call(dd.querySelectorAll('.csel-option'), function (o) { o.classList.toggle('active', o === opt); });
         return true;
     }
 
@@ -343,21 +380,16 @@
             calculate();
         });
 
-        var dd = $('pushCurrDropdown');
-        $('pushCurrBtn').addEventListener('click', function (e) {
-            e.stopPropagation();
-            var open = dd.classList.toggle('open');
-            this.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-        Array.prototype.forEach.call(dd.querySelectorAll('.csel-option'), function (opt) {
-            opt.addEventListener('click', function () {
-                $('pushCurrLabel').textContent = opt.dataset.curr;
+        initCsel({ btnId: 'currencySelectorBtn', ddId: 'currencySelectorDropdown', labelId: 'currencySelectorLabel', hiddenId: 'currencySelector' });
+        initCsel({ btnId: 'pushCurrBtn', ddId: 'pushCurrDropdown', labelId: 'pushCurrLabel' });
+        initCsel({ btnId: 'pushPayerBtn', ddId: 'pushPayerDropdown', labelId: 'pushPayerLabel', hiddenId: 'pushPayer' });
+        initCsel({ btnId: 'middlemanPayerBtn', ddId: 'middlemanPayerDropdown', labelId: 'middlemanPayerLabel', hiddenId: 'middlemanPayer' });
+
+        document.addEventListener('click', function () {
+            Array.prototype.forEach.call(document.querySelectorAll('.csel-dropdown.open'), function (dd) {
                 dd.classList.remove('open');
-                $('pushCurrBtn').setAttribute('aria-expanded', 'false');
-                calculate();
             });
         });
-        document.addEventListener('click', function () { dd.classList.remove('open'); });
 
         $('copyBtn').addEventListener('click', function () {
             var midText = '';

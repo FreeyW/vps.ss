@@ -22,7 +22,7 @@ if ($hasQuery) {
     header('X-Robots-Tag: noindex, follow');
 }
 
-$pushCurrOptions = array_values(array_filter(RATE_GRID, static fn(string $c): bool => $c !== 'CNY'));
+$pushCurrOptions = array_merge(['CNY'], RATE_GRID);
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -151,11 +151,17 @@ $pushCurrOptions = array_values(array_filter(RATE_GRID, static fn(string $c): bo
                                 <input type="checkbox" id="useCustomRate" name="useCustomRate" value="1"<?= $in['useCustomRate'] ? ' checked' : '' ?>> 自定义
                             </label>
                         </div>
-                        <select id="currencySelector" name="currencySelector" class="field-input">
-                            <?php foreach (CURRENCIES as $code => $label): ?>
-                                <option value="<?= h($code) ?>"<?= $in['currency'] === $code ? ' selected' : '' ?>><?= h($code . ' · ' . $label) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="csel-wrap csel-block">
+                            <button type="button" class="csel-btn" id="currencySelectorBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="计价币种">
+                                <span id="currencySelectorLabel"><?= h($in['currency'] . ' · ' . CURRENCIES[$in['currency']]) ?></span> <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="csel-dropdown" id="currencySelectorDropdown" role="listbox">
+                                <?php foreach (CURRENCIES as $code => $label): ?>
+                                    <div class="csel-option<?= $in['currency'] === $code ? ' active' : '' ?>" role="option" data-value="<?= h($code) ?>" data-label="<?= h($code . ' · ' . $label) ?>"><?= h($code . ' · ' . $label) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="currencySelector" name="currencySelector" value="<?= h($in['currency']) ?>">
                         <div id="customRateWrapper" class="custom-rate<?= $in['useCustomRate'] ? '' : ' hidden' ?>">
                             <span>1 <span id="customRateLabel"><?= h($in['currency']) ?></span> =</span>
                             <input type="number" step="any" min="0" inputmode="decimal" id="customRateInput" name="customRateInput"
@@ -227,15 +233,21 @@ $pushCurrOptions = array_values(array_filter(RATE_GRID, static fn(string $c): bo
                             </button>
                             <div class="csel-dropdown" id="pushCurrDropdown" role="listbox">
                                 <?php foreach ($pushCurrOptions as $code): ?>
-                                    <div class="csel-option" role="option" data-curr="<?= h($code) ?>"><?= h($code) ?></div>
+                                    <div class="csel-option<?= $in['pushCurrency'] === $code ? ' active' : '' ?>" role="option" data-value="<?= h($code) ?>"><?= h($code) ?></div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <select id="pushPayer" name="pushPayer" aria-label="Push 费承担方">
-                            <option value="buyer"<?= $in['pushPayer'] === 'buyer' ? ' selected' : '' ?>>买家付</option>
-                            <option value="seller"<?= $in['pushPayer'] === 'seller' ? ' selected' : '' ?>>卖家付</option>
-                            <option value="split"<?= $in['pushPayer'] === 'split' ? ' selected' : '' ?>>AA平摊</option>
-                        </select>
+                        <div class="csel-wrap">
+                            <button type="button" class="csel-btn" id="pushPayerBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Push 费承担方">
+                                <span id="pushPayerLabel"><?= h(PUSH_PAYER_LABELS[$in['pushPayer']]) ?></span> <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="csel-dropdown" id="pushPayerDropdown" role="listbox">
+                                <?php foreach (PUSH_PAYER_LABELS as $value => $label): ?>
+                                    <div class="csel-option<?= $in['pushPayer'] === $value ? ' active' : '' ?>" role="option" data-value="<?= h($value) ?>" data-label="<?= h($label) ?>"><?= h($label) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="pushPayer" name="pushPayer" value="<?= h($in['pushPayer']) ?>">
                     </div>
                 </div>
 
@@ -322,11 +334,17 @@ $pushCurrOptions = array_values(array_filter(RATE_GRID, static fn(string $c): bo
                             <input type="checkbox" id="useMiddleman" name="useMiddleman" value="1"<?= $in['useMiddleman'] ? ' checked' : '' ?>>
                             开启中介担保 (5%)
                         </label>
-                        <select id="middlemanPayer" name="middlemanPayer" aria-label="中介费承担方">
-                            <option value="buyer"<?= $in['middlemanPayer'] === 'buyer' ? ' selected' : '' ?>>买家付中介</option>
-                            <option value="seller"<?= $in['middlemanPayer'] === 'seller' ? ' selected' : '' ?>>卖家付中介</option>
-                            <option value="split"<?= $in['middlemanPayer'] === 'split' ? ' selected' : '' ?>>AA平摊中介</option>
-                        </select>
+                        <div class="csel-wrap">
+                            <button type="button" class="csel-btn" id="middlemanPayerBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="中介费承担方">
+                                <span id="middlemanPayerLabel"><?= h(MIDDLEMAN_PAYER_LABELS[$in['middlemanPayer']]) ?></span> <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="csel-dropdown" id="middlemanPayerDropdown" role="listbox">
+                                <?php foreach (MIDDLEMAN_PAYER_LABELS as $value => $label): ?>
+                                    <div class="csel-option<?= $in['middlemanPayer'] === $value ? ' active' : '' ?>" role="option" data-value="<?= h($value) ?>" data-label="<?= h($label) ?>"><?= h($label) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="middlemanPayer" name="middlemanPayer" value="<?= h($in['middlemanPayer']) ?>">
                     </div>
 
                     <div class="final-box<?= $R['extraFeeActive'] ? ' active' : '' ?>" id="finalCostBox">
