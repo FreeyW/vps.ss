@@ -53,6 +53,11 @@ $pushCurrOptions = array_values(array_filter(RATE_GRID, static fn(string $c): bo
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="/assets/style.css?v=<?= h((string)@filemtime(__DIR__ . '/assets/style.css')) ?>">
+<script async src="https://stat.re/js/pa-huCrc-i_Hm2hnAiJGR6Fm.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
 <script type="application/ld+json">
 <?= json_encode([
     '@context' => 'https://schema.org',
