@@ -29,6 +29,7 @@ const CURRENCIES = [
     'JPY' => '日元',
     'HKD' => '港币',
     'TWD' => '新台币',
+    'CAD' => '加元',
 ];
 
 // 汇率面板展示的币种（与原页面保持一致）
@@ -47,6 +48,19 @@ const COUNTER_KEEP_DAYS = 60;   // 每日计数保留天数
 
 // ---------- 业务常量 ----------
 const MIDDLEMAN_FEE_RATE = 0.05;   // 中介担保费比例
+
+const PUSH_PAYER_LABELS = [
+    'buyer'  => '买家付',
+    'seller' => '卖家付',
+    'split'  => 'AA平摊',
+];
+
+const MIDDLEMAN_PAYER_LABELS = [
+    'buyer'  => '买家付中介',
+    'seller' => '卖家付中介',
+    'split'  => 'AA平摊中介',
+];
+
 const CYCLES = [
     30   => '月付',
     91   => '季付',

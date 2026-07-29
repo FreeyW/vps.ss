@@ -186,8 +186,6 @@ input::-webkit-calendar-picker-indicator {
     box-shadow: 0 0 0 3px rgba(0, 191, 165, .12);
 }
 
-select.field-input { cursor: pointer; }
-
 .core-input {
     font-size: 22px;
     font-weight: 800;
@@ -287,19 +285,10 @@ select.field-input { cursor: pointer; }
 }
 
 .push-row .push-title { font-size: 14px; font-weight: 700; color: var(--muted); }
-.push-row .push-controls { display: flex; align-items: center; gap: 9px; margin-left: auto; }
+.push-row .push-controls { display: flex; align-items: center; gap: 9px; margin-left: auto; flex-wrap: wrap; }
 .push-row .push-fee { width: 92px; padding: 9px 11px; background: #fff; }
 
-.push-row select {
-    width: auto;
-    padding: 9px 10px;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--brand-dark);
-    background: #fff;
-}
-
-/* 自定义币种下拉 */
+/* 统一下拉样式：所有下拉选项均使用自定义 csel-wrap，不使用系统原生 select 样式 */
 .csel-wrap { position: relative; display: inline-block; }
 
 .csel-btn {
@@ -314,9 +303,29 @@ select.field-input { cursor: pointer; }
     font-weight: 800;
     color: var(--ink);
     cursor: pointer;
+    transition: border-color .15s, background .15s, box-shadow .15s;
 }
 
+.csel-btn:hover { border-color: #bfe9e0; }
+.csel-btn:focus-visible { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(0, 191, 165, .12); }
+
 .csel-btn i { font-size: 10px; color: var(--faint); }
+
+/* 计价币种：占满宽度，视觉上与其他 field-input 一致 */
+.csel-wrap.csel-block { display: block; width: 100%; }
+
+.csel-wrap.csel-block .csel-btn {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.csel-wrap.csel-block .csel-dropdown { left: 0; right: 0; }
 
 .csel-dropdown {
     position: absolute;
@@ -345,6 +354,7 @@ select.field-input { cursor: pointer; }
 }
 
 .csel-option:hover { background: var(--brand-soft); color: var(--brand-dark); }
+.csel-option.active { background: var(--brand-soft); color: var(--brand-dark); }
 
 /* ---------- 右侧结果面板（浅色主题） ---------- */
 .result-panel {
@@ -472,17 +482,7 @@ select.field-input { cursor: pointer; }
 .check-label input { accent-color: var(--brand); width: 17px; height: 17px; }
 .check-label:hover { color: var(--ink-2); }
 
-.settle-head select {
-    width: auto;
-    padding: 7px 9px;
-    font-size: 13px;
-    font-weight: 700;
-    background: #fff;
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    color: var(--ink-2);
-    cursor: pointer;
-}
+.settle-head .csel-btn { padding: 7px 9px; font-size: 13px; font-weight: 700; color: var(--ink-2); }
 
 .final-box {
     border-radius: 14px;
