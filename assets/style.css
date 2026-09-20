@@ -32,7 +32,7 @@ body {
     color: var(--ink);
     font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.45;
     -webkit-font-smoothing: antialiased;
 }
@@ -82,14 +82,14 @@ input::-webkit-calendar-picker-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     box-shadow: 0 5px 14px rgba(0, 191, 165, .28);
     flex: none;
 }
 
 .brand h1 {
     margin: 0;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 800;
     letter-spacing: -.01em;
     color: var(--ink);
@@ -98,7 +98,7 @@ input::-webkit-calendar-picker-indicator {
 
 .brand .tagline {
     margin: 2px 0 0;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: .14em;
     text-transform: uppercase;
@@ -109,7 +109,7 @@ input::-webkit-calendar-picker-indicator {
     display: flex;
     flex-wrap: wrap;
     gap: 6px 16px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--muted);
 }
@@ -146,7 +146,7 @@ input::-webkit-calendar-picker-indicator {
 
 .section-label {
     margin: 0 0 10px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -158,7 +158,7 @@ input::-webkit-calendar-picker-indicator {
 /* ---------- 表单 ---------- */
 .field-label {
     display: block;
-    font-size: 11.5px;
+    font-size: 13.5px;
     font-weight: 800;
     letter-spacing: .06em;
     text-transform: uppercase;
@@ -174,7 +174,7 @@ input::-webkit-calendar-picker-indicator {
     background: #f8fafc;
     border: 1.5px solid var(--line);
     border-radius: 10px;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--ink);
     outline: none;
@@ -188,7 +188,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .core-input {
-    font-size: 19px;
+    font-size: 21px;
     font-weight: 800;
     padding: 10px 13px;
     border-width: 2px;
@@ -205,7 +205,7 @@ input::-webkit-calendar-picker-indicator {
     background: #fff;
     color: var(--faint);
     font-weight: 800;
-    font-size: 13.5px;
+    font-size: 15.5px;
     border-radius: 9px;
     padding: 8px 0;
     cursor: pointer;
@@ -229,7 +229,7 @@ input::-webkit-calendar-picker-indicator {
     cursor: pointer;
     text-transform: none;
     letter-spacing: 0;
-    font-size: 12px;
+    font-size: 14px;
     color: var(--muted);
 }
 
@@ -246,14 +246,14 @@ input::-webkit-calendar-picker-indicator {
     border-radius: 10px;
 }
 
-.custom-rate span { font-size: 12.5px; font-weight: 700; color: var(--muted); white-space: nowrap; }
-.custom-rate .field-input { padding: 5px 8px; font-size: 14px; background: #fff; }
+.custom-rate span { font-size: 14.5px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.custom-rate .field-input { padding: 5px 8px; font-size: 16px; background: #fff; }
 
 .link-btn {
     background: none;
     border: 0;
     padding: 0;
-    font-size: 12.5px;
+    font-size: 14.5px;
     font-weight: 700;
     color: var(--faint);
     cursor: pointer;
@@ -270,9 +270,9 @@ input::-webkit-calendar-picker-indicator {
     margin-bottom: 12px;
 }
 
-.settle-label { font-size: 12px; font-weight: 800; color: #0f8a78; margin-bottom: 5px; }
+.settle-label { font-size: 14px; font-weight: 800; color: #0f8a78; margin-bottom: 5px; }
 
-.bind-hint { font-size: 12px; font-weight: 700; color: #0f8a78; margin-top: 8px; }
+.bind-hint { font-size: 14px; font-weight: 700; color: #0f8a78; margin-top: 8px; }
 
 .push-row {
     background: #f8fafc;
@@ -285,7 +285,7 @@ input::-webkit-calendar-picker-indicator {
     flex-wrap: wrap;
 }
 
-.push-row .push-title { font-size: 13px; font-weight: 700; color: var(--muted); }
+.push-row .push-title { font-size: 15px; font-weight: 700; color: var(--muted); }
 .push-row .push-controls { display: flex; align-items: center; gap: 7px; margin-left: auto; flex-wrap: wrap; }
 .push-row .push-fee { width: 84px; padding: 7px 10px; background: #fff; }
 
@@ -300,7 +300,7 @@ input::-webkit-calendar-picker-indicator {
     background: #fff;
     border: 1.5px solid var(--line);
     border-radius: 10px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 800;
     color: var(--ink);
     cursor: pointer;
@@ -310,7 +310,7 @@ input::-webkit-calendar-picker-indicator {
 .csel-btn:hover { border-color: #bfe9e0; }
 .csel-btn:focus-visible { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(0, 191, 165, .12); }
 
-.csel-btn i { font-size: 10px; color: var(--faint); }
+.csel-btn i { font-size: 12px; color: var(--faint); }
 
 /* 计价币种：占满宽度，视觉上与其他 field-input 一致 */
 .csel-wrap.csel-block { display: block; width: 100%; }
@@ -321,7 +321,7 @@ input::-webkit-calendar-picker-indicator {
     padding: 9px 12px;
     background: #f8fafc;
     border-radius: 10px;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--ink);
 }
@@ -348,7 +348,7 @@ input::-webkit-calendar-picker-indicator {
 
 .csel-option {
     padding: 7px 11px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
@@ -360,7 +360,7 @@ input::-webkit-calendar-picker-indicator {
 /* 操作菜单（复制详情：纯文本 / Markdown 表格） */
 .menu-wrap { position: relative; flex: 1 1 auto; min-width: 0; }
 .menu-wrap > .btn { width: 100%; }
-.menu-wrap .caret { font-size: 10px; opacity: .8; margin-left: 2px; }
+.menu-wrap .caret { font-size: 12px; opacity: .8; margin-left: 2px; }
 
 .menu-dropdown { left: 0; right: auto; min-width: 190px; }
 
@@ -376,7 +376,7 @@ input::-webkit-calendar-picker-indicator {
     white-space: nowrap;
 }
 
-.menu-dropdown .csel-option i { width: 16px; text-align: center; color: var(--faint); font-size: 13px; }
+.menu-dropdown .csel-option i { width: 16px; text-align: center; color: var(--faint); font-size: 15px; }
 .menu-dropdown .csel-option:hover i { color: var(--brand-dark); }
 
 /* ---------- 右侧结果面板（浅色主题） ---------- */
@@ -396,7 +396,7 @@ input::-webkit-calendar-picker-indicator {
 
 .result-hero .hero-label {
     margin: 0 0 2px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -404,7 +404,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .result-hero .hero-value {
-    font-size: 44px;
+    font-size: 46px;
     line-height: 1.1;
     font-weight: 800;
     letter-spacing: -.02em;
@@ -419,8 +419,8 @@ input::-webkit-calendar-picker-indicator {
     border-top: 1px solid #e4eeeb;
 }
 
-.premium-box .premium-title { margin: 0 0 2px; font-size: 12px; font-weight: 800; }
-.premium-box .premium-value { font-size: 26px; font-weight: 800; line-height: 1.15; }
+.premium-box .premium-title { margin: 0 0 2px; font-size: 14px; font-weight: 800; }
+.premium-box .premium-value { font-size: 28px; font-weight: 800; line-height: 1.15; }
 .is-premium { color: var(--warn); }
 .is-discount { color: var(--good); }
 
@@ -438,14 +438,14 @@ input::-webkit-calendar-picker-indicator {
 .result-row:last-child { border-bottom: 0; }
 
 .result-label {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--muted);
     text-transform: uppercase;
     letter-spacing: .03em;
 }
 
-.result-value { font-size: 15px; font-weight: 800; color: var(--ink-2); text-align: right; }
+.result-value { font-size: 17px; font-weight: 800; color: var(--ink-2); text-align: right; }
 .result-row.accent .result-label, .result-row.accent .result-value { color: var(--brand-dark); }
 .result-value.soft { color: var(--faint); }
 
@@ -455,14 +455,14 @@ input::-webkit-calendar-picker-indicator {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 5px;
 }
 
 .progress-head .p-title { color: var(--muted); }
-.progress-head .p-days { color: var(--brand-dark); font-size: 16px; font-weight: 800; }
+.progress-head .p-days { color: var(--brand-dark); font-size: 18px; font-weight: 800; }
 .progress-head .p-days.expired { color: var(--danger); }
 
 .progress-track { background: #e3edea; border-radius: 99px; height: 7px; overflow: hidden; }
@@ -475,12 +475,12 @@ input::-webkit-calendar-picker-indicator {
     transition: width .8s cubic-bezier(.4, 0, .2, 1);
 }
 
-.progress-hint { text-align: right; font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 4px; }
+.progress-hint { text-align: right; font-size: 14px; color: var(--muted); font-weight: 700; margin-top: 4px; }
 
 .ratio-block { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e4eeeb; }
 
 .ratio-title {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     color: var(--muted);
@@ -492,7 +492,7 @@ input::-webkit-calendar-picker-indicator {
 .bar-value { background: var(--brand); }
 .bar-premium { background: #fbbf24; }
 
-.ratio-legend { display: flex; gap: 14px; margin-top: 7px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.ratio-legend { display: flex; gap: 14px; margin-top: 7px; font-size: 14px; font-weight: 700; color: var(--muted); }
 .ratio-legend span.dot { width: 8px; height: 8px; border-radius: 99px; display: inline-block; margin-right: 5px; }
 .dot-value { background: var(--brand); }
 .dot-premium { background: #fbbf24; }
@@ -501,11 +501,11 @@ input::-webkit-calendar-picker-indicator {
 
 .settle-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 
-.check-label { display: flex; align-items: center; gap: 7px; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--muted); }
+.check-label { display: flex; align-items: center; gap: 7px; cursor: pointer; font-size: 15px; font-weight: 700; color: var(--muted); }
 .check-label input { accent-color: var(--brand); width: 16px; height: 16px; }
 .check-label:hover { color: var(--ink-2); }
 
-.settle-head .csel-btn { padding: 5px 8px; font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.settle-head .csel-btn { padding: 5px 8px; font-size: 14.5px; font-weight: 700; color: var(--ink-2); }
 
 .final-box {
     border-radius: 12px;
@@ -518,9 +518,9 @@ input::-webkit-calendar-picker-indicator {
 .final-box.active { background: rgba(0, 191, 165, .1); border-color: rgba(0, 191, 165, .35); }
 
 .final-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 2px; flex-wrap: wrap; }
-.final-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-.final-extra { font-size: 12px; font-weight: 700; color: var(--faint); }
-.final-value { text-align: right; font-size: 26px; font-weight: 800; color: var(--ink); line-height: 1.15; }
+.final-label { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.final-extra { font-size: 14px; font-weight: 700; color: var(--faint); }
+.final-value { text-align: right; font-size: 28px; font-weight: 800; color: var(--ink); line-height: 1.15; }
 .final-box.active .final-label,
 .final-box.active .final-extra,
 .final-box.active .final-value { color: var(--brand-dark); }
@@ -531,7 +531,7 @@ input::-webkit-calendar-picker-indicator {
     border: 0;
     border-radius: 11px;
     font-weight: 800;
-    font-size: 14.5px;
+    font-size: 16.5px;
     cursor: pointer;
     transition: transform .15s, box-shadow .15s, background .15s, opacity .15s;
     padding: 11px 14px;
@@ -550,19 +550,19 @@ input::-webkit-calendar-picker-indicator {
 .btn-ghost:hover { background: #e2e8f0; }
 .btn-danger { background: #fdecec; color: var(--danger); }
 .btn-icon { padding: 11px 13px; }
-.btn-sm { padding: 8px 12px; font-size: 13px; border-radius: 9px; }
+.btn-sm { padding: 8px 12px; font-size: 15px; border-radius: 9px; }
 .actions .btn-share { flex: 1 1 auto; }
 
 /* ---------- 汇率面板 ---------- */
 .rate-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
 
-.rate-title { margin: 0; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.rate-title { margin: 0; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
 .rate-title i { color: var(--brand); margin-right: 5px; }
 
 .rate-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 .badge {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
     padding: 2px 9px;
     border-radius: 99px;
@@ -571,7 +571,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .badge.warn { background: #fff7ed; color: #c2410c; }
-.rate-source { font-size: 12px; font-weight: 700; color: var(--faint); }
+.rate-source { font-size: 14px; font-weight: 700; color: var(--faint); }
 
 .rate-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
 
@@ -583,8 +583,8 @@ input::-webkit-calendar-picker-indicator {
     background: #f8fafc;
 }
 
-.rate-cell .code { font-size: 11.5px; font-weight: 800; letter-spacing: .07em; color: var(--faint); }
-.rate-cell .value { font-size: 15px; font-weight: 800; color: var(--ink-2); margin-top: 2px; }
+.rate-cell .code { font-size: 13.5px; font-weight: 800; letter-spacing: .07em; color: var(--faint); }
+.rate-cell .value { font-size: 17px; font-weight: 800; color: var(--ink-2); margin-top: 2px; }
 .rate-cell.is-base { border-color: #c7f0e7; background: var(--brand-soft); }
 .rate-cell.is-base .code { color: #0f8a78; }
 
@@ -622,7 +622,7 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
-.modal-head h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--ink); }
+.modal-head h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--ink); }
 .modal-head h2 i { color: var(--brand); margin-right: 6px; }
 
 .modal-close {
@@ -633,7 +633,7 @@ input::-webkit-calendar-picker-indicator {
     height: 30px;
     border-radius: 9px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .modal-close:hover { background: #e2e8f0; }
@@ -651,14 +651,14 @@ input::-webkit-calendar-picker-indicator {
 .share-preview img { width: 100%; height: auto; display: block; }
 
 .share-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.share-key { flex: none; width: 74px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.share-key { flex: none; width: 74px; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
 .share-key i { color: var(--faint); margin-right: 3px; }
 
 .share-input {
     flex: 1;
     min-width: 0;
     padding: 8px 10px;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     color: var(--ink-2);
     background: #f8fafc;
@@ -670,25 +670,25 @@ input::-webkit-calendar-picker-indicator {
 
 .share-input:focus { border-color: var(--brand); background: #fff; }
 
-.share-note { margin: 6px 0 0; font-size: 12px; color: var(--faint); font-weight: 600; }
+.share-note { margin: 6px 0 0; font-size: 14px; color: var(--faint); font-weight: 600; }
 
 /* ---------- SEO 说明区 ---------- */
 .prose { margin-top: 16px; }
-.prose h2 { font-size: 19px; font-weight: 800; margin: 0 0 10px; color: var(--ink); }
-.prose h3 { font-size: 15.5px; font-weight: 800; margin: 16px 0 5px; color: var(--ink-2); }
-.prose h4 { font-size: 14.5px; font-weight: 800; margin: 12px 0 4px; color: var(--ink-2); }
-.prose p, .prose li { font-size: 14.5px; color: var(--ink-2); }
+.prose h2 { font-size: 21px; font-weight: 800; margin: 0 0 10px; color: var(--ink); }
+.prose h3 { font-size: 17.5px; font-weight: 800; margin: 16px 0 5px; color: var(--ink-2); }
+.prose h4 { font-size: 16.5px; font-weight: 800; margin: 12px 0 4px; color: var(--ink-2); }
+.prose p, .prose li { font-size: 16.5px; color: var(--ink-2); }
 .prose p { margin: 0 0 9px; }
 .prose ul, .prose ol { margin: 0 0 9px; padding-left: 20px; }
 .prose li { margin-bottom: 4px; }
-.prose code { background: #f1f5f9; padding: 1px 5px; border-radius: 5px; font-size: 13.5px; }
+.prose code { background: #f1f5f9; padding: 1px 5px; border-radius: 5px; font-size: 15.5px; }
 
 .formula {
     background: #f8fafc;
     border-left: 4px solid var(--brand);
     border-radius: 8px;
     padding: 10px 14px;
-    font-size: 14.5px;
+    font-size: 16.5px;
     font-weight: 700;
     color: var(--ink-2);
     margin: 0 0 12px;
@@ -698,7 +698,7 @@ input::-webkit-calendar-picker-indicator {
     max-width: 1180px;
     margin: 20px auto 0;
     text-align: center;
-    font-size: 13px;
+    font-size: 15px;
     color: var(--faint);
     font-weight: 600;
 }
@@ -715,7 +715,7 @@ input::-webkit-calendar-picker-indicator {
     gap: 8px;
     background: #16233b;
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     padding: 10px 18px;
     border-radius: 99px;
@@ -748,15 +748,55 @@ input::-webkit-calendar-picker-indicator {
     body { padding: 10px 10px 28px; }
     .card { padding: 13px; }
     .result-panel { padding: 14px 13px 13px; }
-    .result-hero .hero-value { font-size: 36px; }
+    .result-hero .hero-value { font-size: 38px; }
     .grid-renew { grid-template-columns: 1fr; }
     .grid-cycle { grid-template-columns: repeat(3, 1fr); }
     .rate-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .brand h1 { font-size: 18px; }
-    .final-value { font-size: 22px; }
+    .brand h1 { font-size: 20px; }
+    .final-value { font-size: 24px; }
     .push-row .push-controls { margin-left: 0; width: 100%; }
     .push-row .push-fee { flex: 1; width: auto; }
     .share-row { flex-wrap: wrap; }
     .share-key { width: 100%; }
     .share-input { flex: 1 1 0; }
 }
+
+/* ---------- 日期选择（flatpickr 自定义控件，替代系统原生弹层） ---------- */
+.date-field { position: relative; }
+.date-field .fa-calendar-days {
+    display: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--faint);
+    pointer-events: none;
+    font-size: 15px;
+}
+.date-field.has-picker .fa-calendar-days { display: block; }
+.date-field.has-picker .field-input { padding-right: 36px; cursor: pointer; }
+
+.flatpickr-calendar {
+    font-family: inherit;
+    border-radius: 14px;
+    border: 1px solid var(--line-soft);
+    box-shadow: var(--shadow-lg);
+    font-size: 15px;
+}
+.flatpickr-calendar.arrowTop:before, .flatpickr-calendar.arrowTop:after { border-bottom-color: #fff; }
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months { font-weight: 800; color: var(--ink); }
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg { fill: var(--brand-dark); }
+.flatpickr-current-month input.cur-year { font-weight: 800; color: var(--ink); }
+span.flatpickr-weekday { color: var(--faint); font-weight: 800; font-size: 13px; }
+.flatpickr-day { color: var(--ink-2); font-weight: 600; border-radius: 9px; }
+.flatpickr-day:hover, .flatpickr-day.prevMonthDay:hover, .flatpickr-day.nextMonthDay:hover { background: var(--brand-soft); border-color: var(--brand-soft); color: var(--brand-dark); }
+.flatpickr-day.today { border-color: var(--brand); color: var(--brand-dark); }
+.flatpickr-day.today:hover { background: var(--brand-soft); color: var(--brand-dark); }
+.flatpickr-day.selected, .flatpickr-day.selected:hover,
+.flatpickr-day.startRange, .flatpickr-day.endRange { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: 0 4px 12px rgba(0, 191, 165, .35); }
+.flatpickr-time { border-top: 1px solid var(--line-soft); }
+.flatpickr-time input, .flatpickr-time .flatpickr-time-separator { color: var(--ink); font-weight: 800; font-size: 16px; }
+.flatpickr-time input:hover, .flatpickr-time input:focus { background: var(--brand-soft); }
+.flatpickr-time .flatpickr-am-pm { display: none; }

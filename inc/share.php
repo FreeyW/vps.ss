@@ -117,9 +117,9 @@ function build_share_svg(array $in, array $R, array $rates, string $rateDate): s
             . ($in['useCustomRate'] && $in['customRate'] !== null && $in['customRate'] > 0 ? '（自定义）' : '');
     }
     $subLine = implode(' · ', $subParts);
+    $subSize = mb_strlen($subLine) > 44 ? 21 : 24;
 
-    $barW    = 700;
-    $barFill = round($barW * $pct / 100, 1);
+    $barW    = 688;
 
     // 右侧统计
     $stats = [
@@ -132,24 +132,24 @@ function build_share_svg(array $in, array $R, array $rates, string $rateDate): s
         $stats[] = [$prem >= 0 ? '卖家溢价' : '卖家折价', share_signed($prem), $prem >= 0 ? '#FFD166' : '#C9F7EE'];
     }
     $n      = count($stats);
-    $pitch  = $n <= 2 ? 140 : 92;
-    $startY = $n <= 2 ? 205 : 165;
+    $pitch  = $n <= 2 ? 150 : 96;
+    $startY = $n <= 2 ? 205 : 160;
     $statsSvg = '';
     foreach ($stats as $i => [$label, $value, $color]) {
         $ly = $startY + $i * $pitch;
-        $vy = $ly + 46;
-        $vs = mb_strlen($value) > 10 ? 32 : 40;
-        $statsSvg .= '<text x="904" y="' . $ly . '" font-size="19" opacity=".68">' . svg_esc($label) . '</text>'
-            . '<text x="904" y="' . $vy . '" font-size="' . $vs . '" font-weight="800" fill="' . $color . '">' . svg_esc($value) . '</text>';
+        $vy = $ly + 54;
+        $vs = mb_strlen($value) > 9 ? 36 : 46;
+        $statsSvg .= '<text x="888" y="' . $ly . '" font-size="24" opacity=".72">' . svg_esc($label) . '</text>'
+            . '<text x="888" y="' . $vy . '" font-size="' . $vs . '" font-weight="800" fill="' . $color . '">' . svg_esc($value) . '</text>';
     }
 
     // 左下：买家总支出
     $totalSvg = '';
     if ($hasPaid) {
         $extra = (float)$R['extraFee'];
-        $totalSvg = '<text x="104" y="492"><tspan font-size="18" opacity=".68">买家总支出 </tspan>'
-            . '<tspan font-size="26" font-weight="800">¥ ' . svg_esc(share_money((float)$R['totalCost'])) . '</tspan></text>'
-            . '<text x="804" y="492" font-size="17" opacity=".6" text-anchor="end">'
+        $totalSvg = '<text x="104" y="500"><tspan font-size="22" opacity=".72">买家总支出 </tspan>'
+            . '<tspan font-size="30" font-weight="800">¥ ' . svg_esc(share_money((float)$R['totalCost'])) . '</tspan></text>'
+            . '<text x="792" y="500" font-size="20" opacity=".62" text-anchor="end">'
             . ($extra > 0 ? '含 Push / 中介 + ¥ ' . svg_esc(share_money($extra)) : '无额外买家支出')
             . '</text>';
     }
@@ -169,6 +169,7 @@ function build_share_svg(array $in, array $R, array $rates, string $rateDate): s
     $eTrade  = svg_esc(share_date((string)$in['tradeDate']));
     $eExpiry = svg_esc(share_date((string)$in['expiryDate']));
     $eRate   = svg_esc($rateDate);
+    $barFill = round($barW * $pct / 100, 1);
 
     $svg = <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
@@ -206,22 +207,22 @@ function build_share_svg(array $in, array $R, array $rates, string $rateDate): s
     </circle>
   </g>
   <g font-family="{$font}" fill="#FFFFFF">
-    <text x="104" y="118"><tspan font-size="30" font-weight="800">VPS.ss</tspan><tspan font-size="20" font-weight="600" opacity=".75"> · 剩余价值计算器</tspan></text>
-    <text x="104" y="166" font-size="21" opacity=".72">当前剩余价值 (CNY)</text>
-    <text x="104" y="262" font-size="{$heroSize}" font-weight="800" letter-spacing="-1">{$eHero}</text>
-    <text x="104" y="304" font-size="20" opacity=".68">{$eSub}</text>
-    <text x="104" y="370" font-size="19" opacity=".68">剩余周期</text>
-    <text x="804" y="370" font-size="22" font-weight="700" text-anchor="end">{$ePct}%</text>
-    <rect x="104" y="386" width="{$barW}" height="12" rx="6" fill="#0A5F52" opacity=".75"/>
-    <rect x="104" y="386" width="{$barFill}" height="12" rx="6" fill="#FBBF24"/>
-    <text x="104" y="440" font-size="18" opacity=".6">交易日 {$eTrade}</text>
-    <text x="804" y="440" font-size="18" opacity=".6" text-anchor="end">到期日 {$eExpiry}</text>
+    <text x="104" y="116"><tspan font-size="32" font-weight="800">VPS.ss</tspan><tspan font-size="22" font-weight="600" opacity=".78"> · 剩余价值计算器</tspan></text>
+    <text x="104" y="170" font-size="26" opacity=".78">当前剩余价值 (CNY)</text>
+    <text x="104" y="266" font-size="{$heroSize}" font-weight="800" letter-spacing="-1">{$eHero}</text>
+    <text x="104" y="312" font-size="{$subSize}" opacity=".74">{$eSub}</text>
+    <text x="104" y="378" font-size="24" opacity=".74">剩余周期</text>
+    <text x="792" y="378" font-size="26" font-weight="700" text-anchor="end">{$ePct}%</text>
+    <rect x="104" y="394" width="{$barW}" height="14" rx="7" fill="#0A5F52" opacity=".75"/>
+    <rect x="104" y="394" width="{$barFill}" height="14" rx="7" fill="#FBBF24"/>
+    <text x="104" y="452" font-size="22" opacity=".68">交易日 {$eTrade}</text>
+    <text x="792" y="452" font-size="22" opacity=".68" text-anchor="end">到期日 {$eExpiry}</text>
     {$totalSvg}
-    <line x1="858" y1="120" x2="858" y2="500" stroke="#FFFFFF" opacity=".18"/>
+    <line x1="846" y1="120" x2="846" y2="510" stroke="#FFFFFF" opacity=".18"/>
     {$statsSvg}
   </g>
-  <text x="600" y="610" text-anchor="middle" font-family="{$font}" font-size="16" font-weight="600" fill="#5F7A73">由 VPS.ss 提供计算服务</text>
-  <text x="1146" y="610" text-anchor="end" font-family="{$font}" font-size="13" fill="#8AA39B">汇率 {$eRate}</text>
+  <text x="600" y="611" text-anchor="middle" font-family="{$font}" font-size="18" font-weight="600" fill="#5F7A73">由 VPS.ss 提供计算服务</text>
+  <text x="1146" y="611" text-anchor="end" font-family="{$font}" font-size="14" fill="#8AA39B">汇率 {$eRate}</text>
 </svg>
 SVG;
 
