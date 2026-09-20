@@ -52,6 +52,7 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="/assets/vendor/flatpickr/flatpickr.min.css?v=4.6.13">
 <link rel="stylesheet" href="/assets/style.css?v=<?= h((string)@filemtime(__DIR__ . '/assets/style.css')) ?>">
 <script async src="https://stat.re/js/pa-huCrc-i_Hm2hnAiJGR6Fm.js"></script>
 <script>
@@ -189,14 +190,20 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
                 </div>
                 <div class="grid-2">
                     <div>
-                        <label class="field-label" for="tradeDate">交易日期</label>
-                        <input type="<?= $in['isDateTime'] ? 'datetime-local' : 'date' ?>" id="tradeDate" name="tradeDate"
-                               class="field-input" value="<?= h($in['tradeDate']) ?>">
+                        <label class="field-label" for="tradeDate" id="tradeDateLabel">交易日期</label>
+                        <div class="date-field">
+                            <input type="<?= $in['isDateTime'] ? 'datetime-local' : 'date' ?>" id="tradeDate" name="tradeDate"
+                                   class="field-input" value="<?= h($in['tradeDate']) ?>" autocomplete="off">
+                            <i class="fas fa-calendar-days" aria-hidden="true"></i>
+                        </div>
                     </div>
                     <div>
-                        <label class="field-label" for="expiryDate">到期日期</label>
-                        <input type="<?= $in['isDateTime'] ? 'datetime-local' : 'date' ?>" id="expiryDate" name="expiryDate"
-                               class="field-input" value="<?= h($in['expiryDate']) ?>">
+                        <label class="field-label" for="expiryDate" id="expiryDateLabel">到期日期</label>
+                        <div class="date-field">
+                            <input type="<?= $in['isDateTime'] ? 'datetime-local' : 'date' ?>" id="expiryDate" name="expiryDate"
+                                   class="field-input" value="<?= h($in['expiryDate']) ?>" autocomplete="off">
+                            <i class="fas fa-calendar-days" aria-hidden="true"></i>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -383,7 +390,7 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
         <h3>四步得到结果</h3>
         <ol>
             <li><strong>填续费信息</strong>：输入商家标注的续费价格，选择计价币种与付款周期（月付 / 季付 / 半年 / 年付 / 两年 / 三年）。</li>
-            <li><strong>填时间信息</strong>：默认交易日期为今天，到期日期按周期自动推算，也可手动修改；点击「精确到时分」可按小时结算短周期机器。</li>
+            <li><strong>填时间信息</strong>：默认交易日期为今天，到期日期按周期自动推算，也可点开日历选择或直接输入；点击「精确到时分」可按小时结算短周期机器。</li>
             <li><strong>填结算金额</strong>：填写「实付卖家」自动反推溢价，或填写「卖家溢价」自动反推应付金额，两个方向随时切换。</li>
             <li><strong>加上附加费用</strong>：按需填写 Push 手续费与 5% 中介担保费，并选择由买家承担、卖家承担还是双方 AA 平摊。</li>
         </ol>
@@ -445,6 +452,8 @@ window.VPS = {
     hasParams: <?= $in['hasParams'] ? 'true' : 'false' ?>
 };
 </script>
+<script src="/assets/vendor/flatpickr/flatpickr.min.js?v=4.6.13" defer></script>
+<script src="/assets/vendor/flatpickr/zh.js?v=4.6.13" defer></script>
 <script src="/assets/app.js?v=<?= h((string)@filemtime(__DIR__ . '/assets/app.js')) ?>" defer></script>
 </body>
 </html>

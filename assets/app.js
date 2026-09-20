@@ -382,6 +382,71 @@
             });
     }
 
+    /* ---------------- 日期选择器（flatpickr，替代系统原生控件） ---------------- */
+    var pickers = {};
+    var DATE_IDS = ['tradeDate', 'expiryDate'];
+
+    function pickerLocale() {
+        var fp = window.flatpickr;
+        return (fp && fp.l10ns && fp.l10ns.zh) ? fp.l10ns.zh : 'default';
+    }
+
+    function createPicker(id) {
+        var fp = window.flatpickr;
+        var el = $(id);
+        if (!fp || !el) { return null; }
+        var picker = fp(el, {
+            enableTime: isDateTime,
+            time_24hr: true,
+            minuteIncrement: 1,
+            dateFormat: isDateTime ? 'Y-m-dTH:i' : 'Y-m-d',
+            altInput: true,
+            altFormat: isDateTime ? 'Y-m-d H:i' : 'Y-m-d',
+            altInputClass: 'field-input',
+            allowInput: true,
+            disableMobile: true,
+            locale: pickerLocale(),
+            onChange: function () { calculate(); }
+        });
+        if (picker.altInput) {
+            picker.altInput.id = id + 'Text';
+            picker.altInput.setAttribute('autocomplete', 'off');
+            picker.altInput.setAttribute('inputmode', 'none');
+            picker.altInput.setAttribute('placeholder', isDateTime ? 'YYYY-MM-DD HH:MM' : 'YYYY-MM-DD');
+            var label = $(id + 'Label');
+            if (label) {
+                picker.altInput.setAttribute('aria-label', label.textContent.trim());
+                label.setAttribute('for', picker.altInput.id);
+            }
+        }
+        if (el.parentNode && el.parentNode.classList.contains('date-field')) {
+            el.parentNode.classList.add('has-picker');
+        }
+        return picker;
+    }
+
+    function initPickers() {
+        DATE_IDS.forEach(function (id) { pickers[id] = createPicker(id); });
+    }
+
+    function destroyPickers() {
+        DATE_IDS.forEach(function (id) {
+            var p = pickers[id];
+            if (p) { try { p.destroy(); } catch (e) {} }
+            pickers[id] = null;
+            var el = $(id);
+            if (el && el.parentNode && el.parentNode.classList) { el.parentNode.classList.remove('has-picker'); }
+            var label = $(id + 'Label');
+            if (label) { label.setAttribute('for', id); }
+        });
+    }
+
+    /* 写入日期值（同步到选择器显示） */
+    function setDateValue(id, v) {
+        var p = pickers[id];
+        if (p) { p.setDate(v, false); } else { $(id).value = v; }
+    }
+
     /* ---------------- 状态同步 ---------------- */
     function syncHidden() {
         $('cycleDaysInput').value = cycleDays;
@@ -429,7 +494,7 @@
             var d = new Date($('tradeDate').value);
             if (!isNaN(d.getTime())) {
                 d.setDate(d.getDate() + cycleDays);
-                $('expiryDate').value = localISO(d, isDateTime);
+                setDateValue('expiryDate', localISO(d, isDateTime));
             }
         }
         return true;
@@ -514,7 +579,7 @@
                 var d = new Date($('tradeDate').value);
                 if (!isNaN(d.getTime())) {
                     d.setDate(d.getDate() + cycleDays);
-                    $('expiryDate').value = localISO(d, isDateTime);
+                    setDateValue('expiryDate', localISO(d, isDateTime));
                 }
                 calculate();
             });
@@ -524,6 +589,7 @@
             isDateTime = !isDateTime;
             this.classList.toggle('on', isDateTime);
             var t = $('tradeDate').value, x = $('expiryDate').value;
+            destroyPickers();
             $('tradeDate').type = isDateTime ? 'datetime-local' : 'date';
             $('expiryDate').type = isDateTime ? 'datetime-local' : 'date';
             if (isDateTime) {
@@ -533,6 +599,7 @@
                 if (t && t.length > 10) { $('tradeDate').value = t.slice(0, 10); }
                 if (x && x.length > 10) { $('expiryDate').value = x.slice(0, 10); }
             }
+            initPickers();
             calculate();
         });
 
@@ -635,6 +702,7 @@
         if (!CFG.hasParams) { restoreConfig(); }
         setActiveCycle();
         bind();
+        initPickers();
         calculate();
         refreshRates();
     }
