@@ -46,6 +46,11 @@ const RATE_FALLBACK = [
 const COUNTER_FILE = __DIR__ . '/../data/counter.json';
 const COUNTER_KEEP_DAYS = 60;   // 每日计数保留天数
 
+// ---------- 分享图（SVG） ----------
+const SHARE_DIR      = __DIR__ . '/../share';   // 生成的 SVG 存放目录（站点根目录下 /share/）
+const SHARE_URL_PATH = '/share';                 // 对外访问路径：https://vps.ss/share/xxxxxxxx.svg
+const SHARE_ID_LEN   = 8;                        // 文件名长度（小写字母 + 数字）
+
 // ---------- 业务常量 ----------
 const MIDDLEMAN_FEE_RATE = 0.05;   // 中介担保费比例
 

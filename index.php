@@ -73,7 +73,7 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
             'inLanguage'      => 'zh-CN',
             'isAccessibleForFree' => true,
             'offers'          => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'CNY'],
-            'featureList'     => ['按天折算 VPS 剩余价值', '实时汇率换算人民币', '卖家溢价双向反推', 'Push 手续费分摊', '5% 中介担保费核算'],
+            'featureList'     => ['按天折算 VPS 剩余价值', '实时汇率换算人民币', '卖家溢价双向反推', 'Push 手续费分摊', '5% 中介担保费核算', '一键复制文本 / Markdown 表格', '生成 SVG 结果分享图'],
             'publisher'       => ['@type' => 'Organization', 'name' => SITE_BRAND, 'url' => SITE_URL . '/'],
         ],
         [
@@ -357,9 +357,18 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
                 </div>
 
                 <div class="actions">
-                    <button type="button" class="btn btn-primary" id="copyBtn"><i class="fas fa-copy"></i> 复制详情</button>
-                    <button type="button" class="btn btn-ghost" id="shareBtn" title="生成分享链接" aria-label="生成分享链接"><i class="fas fa-link"></i></button>
-                    <button type="button" class="btn btn-danger" id="resetBtn" title="重置" aria-label="重置"><i class="fas fa-rotate-right"></i></button>
+                    <div class="menu-wrap">
+                        <button type="button" class="btn btn-primary" id="copyBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="copyMenu">
+                            <i class="fas fa-copy"></i> 复制详情 <i class="fas fa-chevron-down caret" aria-hidden="true"></i>
+                        </button>
+                        <div class="csel-dropdown menu-dropdown" id="copyMenu" role="menu" aria-label="复制格式">
+                            <button type="button" class="csel-option" role="menuitem" data-format="text"><i class="fas fa-align-left"></i> 纯文本</button>
+                            <button type="button" class="csel-option" role="menuitem" data-format="markdown"><i class="fab fa-markdown"></i> Markdown 表格</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-ghost btn-share" id="shareImgBtn" title="生成 SVG 分享图"><i class="fas fa-image"></i> 分享图片</button>
+                    <button type="button" class="btn btn-ghost btn-icon" id="shareBtn" title="复制分享链接" aria-label="复制分享链接"><i class="fas fa-link"></i></button>
+                    <button type="button" class="btn btn-danger btn-icon" id="resetBtn" title="重置" aria-label="重置"><i class="fas fa-rotate-right"></i></button>
                 </div>
             </aside>
         </div>
@@ -388,12 +397,37 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
         <h4>汇率用哪一个？</h4>
         <p>页面默认使用每小时更新一次的公开汇率，保留 3 位小数展示。如果你和对方约定按支付宝、PayPal 或某交易所的汇率结算，勾选「自定义」手动填写即可，计算结果会立刻按你的汇率重算。</p>
         <h4>数据会被上传吗？</h4>
-        <p>不会。金额、日期等参数只在你本机与本次请求中使用；点击「分享」时才会把当前参数写进 URL，方便你把结算明细发给交易对方核对。</p>
+        <p>不会主动保存你的输入。金额、日期等参数只在你本机与本次请求中使用；点击「分享链接」时才会把当前参数写进 URL；点击「分享图片」时会把本次计算结果生成一张 SVG 图片保存在服务器，得到可长期访问的图片链接，方便你把结算明细发给交易对方核对。</p>
     </section>
 
     <footer class="site-footer">
         <p>© <?= date('Y') ?> <a href="<?= h(SITE_URL) ?>/"><?= h(SITE_BRAND) ?></a> · VPS 剩余价值计算器 · 汇率更新于 <?= h($rateData['date']) ?> · 结果仅供交易参考</p>
     </footer>
+</div>
+
+<!-- 分享图弹窗 -->
+<div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-box">
+        <div class="modal-head">
+            <h2 id="shareModalTitle"><i class="fas fa-image"></i>分享图片</h2>
+            <button type="button" class="modal-close" data-close aria-label="关闭"><i class="fas fa-xmark"></i></button>
+        </div>
+        <a class="share-preview" id="sharePreviewLink" href="#" target="_blank" rel="noopener" title="在新窗口打开图片">
+            <img id="sharePreviewImg" src="" alt="VPS 剩余价值分享图" width="1200" height="630">
+        </a>
+        <div class="share-row">
+            <span class="share-key"><i class="fab fa-markdown"></i>Markdown</span>
+            <input type="text" readonly class="share-input" id="shareMdInput" aria-label="Markdown 图片代码">
+            <button type="button" class="btn btn-primary btn-sm" data-copy="shareMdInput" data-msg="Markdown 图片代码已复制"><i class="fas fa-copy"></i> 复制</button>
+        </div>
+        <div class="share-row">
+            <span class="share-key"><i class="fas fa-link"></i>图片链接</span>
+            <input type="text" readonly class="share-input" id="shareUrlInput" aria-label="图片链接">
+            <button type="button" class="btn btn-primary btn-sm" data-copy="shareUrlInput" data-msg="图片链接已复制"><i class="fas fa-copy"></i> 复制</button>
+        </div>
+        <p class="share-note">图片已保存在服务器，可直接粘贴到论坛、群聊或帖子中；相同结果只会生成一张图。</p>
+    </div>
 </div>
 
 <script>
@@ -403,6 +437,9 @@ window.VPS = {
     rateDecimals: <?= (int)RATE_DECIMALS ?>,
     midFee: <?= (float)MIDDLEMAN_FEE_RATE ?>,
     brand: <?= json_encode(SITE_BRAND) ?>,
+    siteUrl: <?= json_encode(SITE_URL . '/') ?>,
+    cycles: <?= json_encode(CYCLES, JSON_UNESCAPED_UNICODE) ?>,
+    pushPayerLabels: <?= json_encode(PUSH_PAYER_LABELS, JSON_UNESCAPED_UNICODE) ?>,
     rateGrid: <?= json_encode(RATE_GRID) ?>,
     initialCycle: <?= (int)$in['cycleDays'] ?>,
     hasParams: <?= $in['hasParams'] ? 'true' : 'false' ?>
