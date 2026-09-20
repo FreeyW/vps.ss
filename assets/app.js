@@ -269,7 +269,7 @@
         rows.push(['交易日期', fmtDate(R.tradeDate)]);
         rows.push(['到期日期', fmtDate(R.expiryDate)]);
         rows.push(['剩余天数', money(R.days, isDateTime ? 2 : 0) + ' 天 / ' + R.cycleDays + ' 天 (' + R.pct.toFixed(1) + '%)']);
-        rows.push(['剩余价值', '¥ ' + money(R.resCNY) + (R.curr !== 'CNY' ? ' ≈ ' + money(R.resOrig) + ' ' + R.curr : '')]);
+        rows.push(['剩余价值', '¥ ' + money(R.resCNY) + (R.curr !== 'CNY' ? ' ≈ ' + money(R.resOrig) + ' ' + R.curr : ''), true]);   // 第三项：Markdown 中加粗
 
         if (R.hasPaid) {
             rows.push(['实付卖家', '¥ ' + money(R.actPaid)]);
@@ -298,7 +298,11 @@
     function formatMarkdown(rows) {
         var esc = function (s) { return String(s).replace(/\|/g, '\\|'); };
         var lines = ['**VPS 剩余价值详情**', '', '| 项目 | 数值 |', '| :-- | --: |'];
-        rows.forEach(function (r) { lines.push('| ' + esc(r[0]) + ' | ' + esc(r[1]) + ' |'); });
+        rows.forEach(function (r) {
+            var k = esc(r[0]), v = esc(r[1]);
+            if (r[2]) { k = '**' + k + '**'; v = '**' + v + '**'; }
+            lines.push('| ' + k + ' | ' + v + ' |');
+        });
         lines.push('');
         lines.push('由 [' + BRAND + '](' + shareURL() + ') 提供计算服务');
         return lines.join('\n');
