@@ -290,6 +290,14 @@ $pushCurrOptions = array_merge(['CNY'], RATE_GRID);
 
         <!-- 右侧：结果面板（浅色） -->
         <div class="col col-result">
+            <a class="esim-banner" href="https://esim.now/zh/esim/china?utm_source=vps.ss&utm_medium=banner" target="_blank" rel="noopener">
+                <div class="esim-banner__body">
+                    <div class="esim-banner__title">eSIM.Now Anywhere</div>
+                    <div class="esim-banner__desc">旅行 eSIM 流量套餐——在线购买，几分钟即可安装，无需VPN，即可访问Google。</div>
+                </div>
+                <span class="esim-banner__cta">立即获取 eSIM</span>
+            </a>
+
             <aside class="result-panel" aria-live="polite">
                 <div class="result-hero">
                     <p class="hero-label">VPS 剩余价值 (CNY)</p>
