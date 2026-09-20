@@ -270,7 +270,6 @@
         rows.push(['到期日期', fmtDate(R.expiryDate)]);
         rows.push(['剩余天数', money(R.days, isDateTime ? 2 : 0) + ' 天 / ' + R.cycleDays + ' 天 (' + R.pct.toFixed(1) + '%)']);
         rows.push(['剩余价值', '¥ ' + money(R.resCNY) + (R.curr !== 'CNY' ? ' ≈ ' + money(R.resOrig) + ' ' + R.curr : '')]);
-        rows.push(['官方日均', '¥' + plain(R.resCNY / R.days, 3) + ' / 天']);
 
         if (R.hasPaid) {
             rows.push(['实付卖家', '¥ ' + money(R.actPaid)]);
