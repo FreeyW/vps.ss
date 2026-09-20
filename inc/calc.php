@@ -159,6 +159,14 @@ function calculate(array $in, array $rates): array
         'actualPaidValue' => $in['actualPaidRaw'],
         'premiumValue'    => $in['premiumRaw'],
         'rateUsed'        => 1.0,
+        // 以下为原始数值（供分享图 / 接口复用）
+        'resOrig'         => 0.0,
+        'actualPaid'      => null,
+        'premium'         => null,
+        'pushBuyer'       => 0.0,
+        'middlemanBuyer'  => 0.0,
+        'extraFee'        => 0.0,
+        'totalCost'       => 0.0,
     ];
 
     $tradeTs  = strtotime($in['tradeDate']);
@@ -246,6 +254,8 @@ function calculate(array $in, array $rates): array
 
     $out['valid']         = true;
     $out['resCNY']        = $resCNY;
+    $out['resOrig']       = $resOrig;
+    $out['pushBuyer']     = $bPush;
     $out['resCNYText']    = '¥ ' . number_format($resCNY, 2, '.', ',');
     $out['resOrigText']   = number_format($resOrig, 2, '.', ',') . ' ' . $in['currency'];
     $out['remainingText'] = number_format($days, $dec, '.', ',') . ' 天';
@@ -256,6 +266,11 @@ function calculate(array $in, array $rates): array
     if ($actPaid !== null && $actPaid >= 0) {
         $extraFee = $bPush + $bMid;
 
+        $out['actualPaid']      = $actPaid;
+        $out['premium']         = (float)$prem;
+        $out['middlemanBuyer']  = $bMid;
+        $out['extraFee']        = $extraFee;
+        $out['totalCost']       = $totalBuyerCost;
         $out['resActualText']   = '¥ ' . number_format($actPaid, 2, '.', ',');
         $out['showMiddleman']   = $bMid > 0;
         $out['middlemanLabel']  = $midWho === 'split' ? '中介费(AA)' : '买家中介费';

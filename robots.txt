@@ -5,6 +5,7 @@ Disallow: /api/
 Disallow: /inc/
 Disallow: /cache/
 Disallow: /data/
+Disallow: /share/
 Disallow: /*?
 
 Sitemap: https://vps.ss/sitemap.xml
