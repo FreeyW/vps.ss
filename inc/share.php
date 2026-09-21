@@ -83,7 +83,7 @@ function share_signed(float $n): string
 }
 
 /**
- * 生成分享 SVG
+ * 生成分享 SVG（1200×630：白色卡片 + 绿色主值区 + 右侧天数卡 + 通栏进度条）
  *
  * @param array<string,mixed> $in     parse_input() 结果
  * @param array<string,mixed> $R      calculate() 结果（valid 必须为 true）
@@ -91,8 +91,7 @@ function share_signed(float $n): string
  */
 function build_share_svg(array $in, array $R, array $rates, string $rateDate): string
 {
-    $font = "'DM Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif";
-    $dec  = $in['isDateTime'] ? 2 : 0;
+    $dec = $in['isDateTime'] ? 2 : 0;
 
     $currency   = (string)$in['currency'];
     $cycleLabel = CYCLES[$in['cycleDays']] ?? ($in['cycleDays'] . ' 天');
@@ -101,128 +100,166 @@ function build_share_svg(array $in, array $R, array $rates, string $rateDate): s
     $resCNY     = (float)$R['resCNY'];
     $hasPaid    = $R['actualPaid'] !== null;
 
-    // ---- 文案 ----
-    $heroText = '¥' . share_money($resCNY);
-    $heroSize = 82;
-    $heroLen  = mb_strlen($heroText);
-    if ($heroLen > 13) {
-        $heroSize = 54;
-    } elseif ($heroLen > 10) {
+    // ---- 主值 ----
+    $heroNum  = share_money($resCNY);
+    $heroLen  = mb_strlen($heroNum);
+    $heroSize = 101;
+    if ($heroLen > 12) {
         $heroSize = 66;
+    } elseif ($heroLen > 10) {
+        $heroSize = 80;
     }
 
+    // ---- 副标题：续费信息 / 汇率 ----
     $subParts = ['续费 ' . share_money((float)$in['amount']) . ' ' . $currency . ' · ' . $cycleLabel];
     if ($currency !== 'CNY') {
         $subParts[] = '1 ' . $currency . ' = ' . number_format((float)$R['rateUsed'], RATE_DECIMALS, '.', '') . ' CNY'
             . ($in['useCustomRate'] && $in['customRate'] !== null && $in['customRate'] > 0 ? '（自定义）' : '');
     }
     $subLine = implode(' · ', $subParts);
-    $subSize = mb_strlen($subLine) > 44 ? 21 : 24;
+    $subSize = mb_strlen($subLine) > 44 ? 18 : 20;
 
-    $barW    = 688;
-
-    // 右侧统计
-    $stats = [
-        ['剩余天数', share_money($days, $dec) . ' 天', '#FFFFFF'],
-        ['周期天数', (string)$in['cycleDays'] . ' 天', '#FFFFFF'],
-    ];
+    // 有实付金额时，主值区再补一行：实付 / 溢价 / 买家总支出
+    $paidSvg = '';
+    $subY    = 368;
     if ($hasPaid) {
-        $prem    = (float)$R['premium'];
-        $stats[] = ['实付卖家', '¥ ' . share_money((float)$R['actualPaid']), '#FFFFFF'];
-        $stats[] = [$prem >= 0 ? '卖家溢价' : '卖家折价', share_signed($prem), $prem >= 0 ? '#FFD166' : '#C9F7EE'];
-    }
-    $n      = count($stats);
-    $pitch  = $n <= 2 ? 150 : 96;
-    $startY = $n <= 2 ? 205 : 160;
-    $statsSvg = '';
-    foreach ($stats as $i => [$label, $value, $color]) {
-        $ly = $startY + $i * $pitch;
-        $vy = $ly + 54;
-        $vs = mb_strlen($value) > 9 ? 36 : 46;
-        $statsSvg .= '<text x="888" y="' . $ly . '" font-size="24" opacity=".72">' . svg_esc($label) . '</text>'
-            . '<text x="888" y="' . $vy . '" font-size="' . $vs . '" font-weight="800" fill="' . $color . '">' . svg_esc($value) . '</text>';
-    }
-
-    // 左下：买家总支出
-    $totalSvg = '';
-    if ($hasPaid) {
-        $extra = (float)$R['extraFee'];
-        $totalSvg = '<text x="104" y="500"><tspan font-size="22" opacity=".72">买家总支出 </tspan>'
-            . '<tspan font-size="30" font-weight="800">¥ ' . svg_esc(share_money((float)$R['totalCost'])) . '</tspan></text>'
-            . '<text x="792" y="500" font-size="20" opacity=".62" text-anchor="end">'
-            . ($extra > 0 ? '含 Push / 中介 + ¥ ' . svg_esc(share_money($extra)) : '无额外买家支出')
+        $prem      = (float)$R['premium'];
+        $premColor = $prem >= 0 ? '#FFD166' : '#DDFBF3';
+        $subY      = 358;
+        $paidSvg   = '<text x="90" y="392" class="vps-numeric" font-size="19" font-weight="400" fill="#F0FFFB">'
+            . '实付卖家 <tspan font-weight="600" fill="#FFFFFF">¥ ' . svg_esc(share_money((float)$R['actualPaid'])) . '</tspan>'
+            . ' · ' . ($prem >= 0 ? '卖家溢价' : '卖家折价') . ' <tspan font-weight="600" fill="' . $premColor . '">' . svg_esc(share_signed($prem)) . '</tspan>'
+            . ' · 买家总支出 <tspan font-weight="600" fill="#FFFFFF">¥ ' . svg_esc(share_money((float)$R['totalCost'])) . '</tspan>'
             . '</text>';
     }
 
-    $title = 'VPS 剩余价值 ' . $heroText;
-    $desc  = '剩余 ' . share_money($days, $dec) . ' 天，共 ' . $in['cycleDays'] . ' 天，到期 ' . share_date((string)$in['expiryDate'])
-        . ($hasPaid ? '，实付 ¥' . share_money((float)$R['actualPaid']) : '');
+    // ---- 天数卡 ----
+    $daysText = share_money($days, $dec);
+    $daysSize = mb_strlen($daysText) > 6 ? 46 : 59;
+    $cycleText = (string)$in['cycleDays'];
 
-    $flow = 'M78 548 C230 505 390 572 560 552 S880 500 1122 546';
+    // ---- 进度条 ----
+    $barX    = 80;
+    $barW    = 1040;
+    $barFill = max(0.0, round($barW * $pct / 100, 1));
+    $pctText = number_format($pct, 1, '.', '');
+
+    $title = 'VPS 剩余价值 ¥' . $heroNum;
+    $desc  = '剩余 ' . $daysText . ' 天，共 ' . $cycleText . ' 天，到期 ' . share_date((string)$in['expiryDate'])
+        . ($hasPaid ? '，实付 ¥' . share_money((float)$R['actualPaid']) : '');
 
     // 预先转义模板中用到的文本
     $eTitle  = svg_esc($title);
     $eDesc   = svg_esc($desc);
-    $eHero   = svg_esc($heroText);
+    $eHero   = svg_esc($heroNum);
     $eSub    = svg_esc($subLine);
-    $ePct    = number_format($pct, 1, '.', '');
+    $eDays   = svg_esc($daysText);
+    $eCycle  = svg_esc($cycleText);
     $eTrade  = svg_esc(share_date((string)$in['tradeDate']));
     $eExpiry = svg_esc(share_date((string)$in['expiryDate']));
     $eRate   = svg_esc($rateDate);
-    $barFill = round($barW * $pct / 100, 1);
 
     $svg = <<<SVG
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">{$eTitle}</title>
   <desc id="desc">{$eDesc}</desc>
   <defs>
-    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="vps-surface" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EEF7F4"/>
+      <stop offset="1" stop-color="#E6F4EF"/>
+    </linearGradient>
+    <linearGradient id="vps-hero" x1="0" y1="0" x2="1" y2=".7">
       <stop offset="0" stop-color="#00C4A8"/>
       <stop offset="1" stop-color="#008F7B"/>
     </linearGradient>
+    <linearGradient id="vps-progress" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00C4A8"/>
+      <stop offset="1" stop-color="#008F7B"/>
+    </linearGradient>
+    <linearGradient id="vps-orbit" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#B9F3E8" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#B9F3E8" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="vps-shadow" x="-10%" y="-10%" width="120%" height="130%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0A5F52" flood-opacity=".07"/>
+    </filter>
+    <clipPath id="vps-hero-clip"><rect x="56" y="126" width="728" height="282" rx="22"/></clipPath>
+    <clipPath id="vps-progress-clip"><rect x="{$barX}" y="474" width="{$barFill}" height="10" rx="5"/></clipPath>
   </defs>
-  <style>@media (prefers-reduced-motion: reduce) { .flow-motion { display: none } }</style>
-  <rect width="1200" height="630" rx="36" fill="#EEF7F4"/>
-  <circle cx="1110" cy="80" r="260" fill="#FBBF24" opacity=".16"/>
-  <circle cx="90" cy="600" r="150" fill="#00BFA5" opacity=".12"/>
-  <rect x="54" y="52" width="1092" height="526" rx="32" fill="url(#card)"/>
-  <circle cx="1080" cy="315" r="270" fill="#FFFFFF" opacity=".06"/>
-  <circle cx="200" cy="90" r="160" fill="#FFFFFF" opacity=".04"/>
+  <style>
+    .vps-type { font-family: 'DM Sans', 'Inter', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', 'Droid Sans Fallback', sans-serif; }
+    .vps-numeric { font-variant-numeric: tabular-nums lining-nums; }
+    @media (prefers-reduced-motion: reduce) { .flow-motion { display: none; } }
+  </style>
+
+  <rect width="1200" height="630" rx="32" fill="url(#vps-surface)"/>
+  <rect x="28" y="26" width="1144" height="542" rx="30" fill="#FFFFFF" filter="url(#vps-shadow)"/>
+  <rect x="28.5" y="26.5" width="1143" height="541" rx="29.5" fill="none" stroke="#D8EBE3"/>
+
+  <!-- 品牌头部 -->
   <g aria-hidden="true">
-    <path d="{$flow}" fill="none" stroke="#FFFFFF" stroke-width="3" opacity=".09"/>
-    <path class="flow-motion" d="{$flow}" fill="none" stroke="#B9F3E8" stroke-width="2" stroke-dasharray="8 18" opacity=".32">
-      <animate attributeName="stroke-dashoffset" from="0" to="-104" dur="6s" repeatCount="indefinite"/>
-    </path>
-    <circle cx="78" cy="548" r="7" fill="#FBBF24" opacity=".65"/>
-    <circle cx="312" cy="541" r="7" fill="#FBBF24" opacity=".65"/>
-    <circle class="flow-motion" cx="560" cy="552" r="20" fill="none" stroke="#FBBF24" stroke-width="2" opacity=".34">
-      <animate attributeName="r" values="17;23;17" dur="2.8s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values=".42;.12;.42" dur="2.8s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="560" cy="552" r="12" fill="#FBBF24"/>
-    <circle cx="814" cy="524" r="6" fill="#FFFFFF" opacity=".28"/>
-    <circle cx="1122" cy="546" r="6" fill="#FFFFFF" opacity=".28"/>
-    <circle class="flow-motion" r="5" fill="#FBBF24" opacity=".9">
-      <animateMotion dur="8s" repeatCount="indefinite" path="{$flow}"/>
-    </circle>
+    <rect x="56" y="55" width="46" height="46" rx="14" fill="#00C4A8"/>
+    <rect x="67" y="66" width="24" height="9" rx="3" fill="none" stroke="#FFFFFF" stroke-width="1.7"/>
+    <rect x="67" y="81" width="24" height="9" rx="3" fill="none" stroke="#FFFFFF" stroke-width="1.7"/>
+    <circle cx="72" cy="70.5" r="1.3" fill="#FFFFFF"/>
+    <circle cx="72" cy="85.5" r="1.3" fill="#FFFFFF"/>
+    <path d="M81 70.5h5 M81 85.5h5" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round"/>
+    <path d="M1073 71h12 M1073 78h30 M1073 85h48" fill="none" stroke="#CBEAE0" stroke-width="3" stroke-linecap="round"/>
   </g>
-  <g font-family="{$font}" fill="#FFFFFF">
-    <text x="104" y="116"><tspan font-size="32" font-weight="800">VPS.ss</tspan><tspan font-size="22" font-weight="600" opacity=".78"> · 剩余价值计算器</tspan></text>
-    <text x="104" y="170" font-size="26" opacity=".78">当前剩余价值 (CNY)</text>
-    <text x="104" y="266" font-size="{$heroSize}" font-weight="800" letter-spacing="-1">{$eHero}</text>
-    <text x="104" y="312" font-size="{$subSize}" opacity=".74">{$eSub}</text>
-    <text x="104" y="378" font-size="24" opacity=".74">剩余周期</text>
-    <text x="792" y="378" font-size="26" font-weight="700" text-anchor="end">{$ePct}%</text>
-    <rect x="104" y="394" width="{$barW}" height="14" rx="7" fill="#0A5F52" opacity=".75"/>
-    <rect x="104" y="394" width="{$barFill}" height="14" rx="7" fill="#FBBF24"/>
-    <text x="104" y="452" font-size="22" opacity=".68">交易日 {$eTrade}</text>
-    <text x="792" y="452" font-size="22" opacity=".68" text-anchor="end">到期日 {$eExpiry}</text>
-    {$totalSvg}
-    <line x1="846" y1="120" x2="846" y2="510" stroke="#FFFFFF" opacity=".18"/>
-    {$statsSvg}
+  <g class="vps-type">
+    <text x="118" y="88" fill="#008F7B"><tspan font-size="31" font-weight="700" letter-spacing="-1">VPS.ss</tspan><tspan font-size="21" font-weight="400" fill="#5F7A73"> · 剩余价值计算器</tspan></text>
+
+    <!-- 主值区 -->
+    <rect x="56" y="126" width="728" height="282" rx="22" fill="url(#vps-hero)"/>
+    <g clip-path="url(#vps-hero-clip)" aria-hidden="true" fill="none" stroke="url(#vps-orbit)">
+      <circle cx="782" cy="153" r="66"/>
+      <circle cx="782" cy="153" r="100"/>
+      <circle cx="782" cy="153" r="134"/>
+      <circle cx="782" cy="153" r="168"/>
+      <circle cx="782" cy="153" r="202"/>
+      <path d="M665 273 830 108 M614 219 813 20" stroke-opacity=".5"/>
+      <circle cx="682" cy="153" r="4" fill="#FFFFFF" stroke="none" opacity=".7"/>
+    </g>
+    <text x="90" y="183" font-size="22" font-weight="400" fill="#F0FFFB">当前剩余价值 (CNY)</text>
+    <text x="87" y="294" class="vps-numeric" font-weight="600" fill="#FFFFFF"><tspan font-size="55" fill="#FFFFFF">¥</tspan><tspan font-size="{$heroSize}" letter-spacing="-3">{$eHero}</tspan></text>
+    <path d="M90 329H750" stroke="#FFFFFF" stroke-opacity=".17"/>
+    <text x="90" y="{$subY}" class="vps-numeric" font-size="{$subSize}" font-weight="400" fill="#F0FFFB">{$eSub}</text>
+    {$paidSvg}
+
+    <!-- 天数卡 -->
+    <rect x="800" y="126" width="344" height="132" rx="22" fill="#E4F7F1"/>
+    <text x="830" y="167" font-size="20" fill="#4B8072">剩余天数</text>
+    <text x="828" y="231" class="vps-numeric" fill="#008F7B"><tspan font-size="{$daysSize}" font-weight="600" letter-spacing="-1.5">{$eDays}</tspan><tspan font-size="23" font-weight="400" fill="#4B8072"> 天</tspan></text>
+    <g transform="translate(1095 161)" aria-hidden="true" fill="none" stroke="#00A48D" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle r="12"/>
+      <path d="M0-6v6l4.5 3"/>
+    </g>
+
+    <rect x="800.5" y="274.5" width="343" height="133" rx="21.5" fill="#F4FBF8" stroke="#DCEEE7"/>
+    <text x="830" y="316" font-size="20" fill="#5F7A73">周期天数</text>
+    <text x="828" y="380" class="vps-numeric" fill="#087C6B"><tspan font-size="59" font-weight="600" letter-spacing="-1.5">{$eCycle}</tspan><tspan font-size="23" font-weight="400" fill="#5F7A73"> 天</tspan></text>
+    <g transform="translate(1095 309)" aria-hidden="true" fill="none" stroke="#75A99A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="-11" y="-9" width="22" height="21" rx="4"/>
+      <path d="M-5-12v6 M5-12v6 M-11-2h22 M-5 4h3 M3 4h3"/>
+    </g>
+
+    <!-- 剩余周期进度 -->
+    <text x="80" y="453" font-size="20" font-weight="500" fill="#326D5E">剩余周期</text>
+    <text x="1120" y="453" text-anchor="end" class="vps-numeric" font-size="24" font-weight="600" fill="#008F7B">{$pctText}%</text>
+    <rect x="{$barX}" y="474" width="{$barW}" height="10" rx="5" fill="#E0F2EB"/>
+    <rect x="{$barX}" y="474" width="{$barFill}" height="10" rx="5" fill="url(#vps-progress)"/>
+    <g clip-path="url(#vps-progress-clip)" aria-hidden="true">
+      <path class="flow-motion" d="M-140 479h80" stroke="#FFFFFF" stroke-width="10" opacity=".22">
+        <animateTransform attributeName="transform" type="translate" values="0 0;1320 0" dur="7s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    <text x="80" y="527" class="vps-numeric" font-size="19" fill="#6B8A7F">交易日 <tspan fill="#355F51" font-weight="500">{$eTrade}</tspan></text>
+    <text x="1120" y="527" text-anchor="end" class="vps-numeric" font-size="19" fill="#6B8A7F">到期日 <tspan fill="#355F51" font-weight="500">{$eExpiry}</tspan></text>
+
+    <!-- 署名与汇率日期 -->
+    <text x="600" y="606" text-anchor="middle" font-size="17" fill="#5F7A73">由 <tspan font-weight="700" fill="#008F7B">VPS.ss</tspan> 提供计算服务</text>
+    <text x="1144" y="606" text-anchor="end" class="vps-numeric" font-size="15" fill="#8AA39B">汇率 {$eRate}</text>
   </g>
-  <text x="600" y="611" text-anchor="middle" font-family="{$font}" font-size="18" font-weight="600" fill="#5F7A73">由 VPS.ss 提供计算服务</text>
-  <text x="1146" y="611" text-anchor="end" font-family="{$font}" font-size="14" fill="#8AA39B">汇率 {$eRate}</text>
 </svg>
 SVG;
 
